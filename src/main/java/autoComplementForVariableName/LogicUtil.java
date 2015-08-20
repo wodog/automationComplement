@@ -18,29 +18,48 @@ public class LogicUtil {
 		return fieldName.contains("_");
 	}
 
-	public static boolean isInitialUpperCase(Field field) {
-		return field.getName().matches("^[A-Z].*$");
+	public static boolean isInitialUpperCase(String fieldName) {
+		return fieldName.matches("^[A-Z].*$");
 	}
 
 	public static String changeVariableNameWithUnderline(Field field) {
 		String fieldName = field.getName();
+		/*if (fieldName.startsWith("_")) {
+			fieldName = fieldName.substring(1).toLowerCase();
+		} else {
+			fieldName = field.getName().toLowerCase();
+		}*/
+		if (fieldName.matches("^_.*$")) {// 首字母是下划线
+			fieldName = fieldName.substring(1);
+		}
+		if (fieldName.matches("^[A-Z].*$")) { // 首字母大写
+			if (fieldName.matches("^.[a-z].*$")) {// 第二字母小写
+				char toLowerChar = fieldName.charAt(0);
+				String toLowerStr = String.valueOf(toLowerChar).toLowerCase();
+				fieldName = fieldName.replaceFirst("" + toLowerChar, toLowerStr);
+			}else if(fieldName.matches("^.[A-Z].*[a-z].*$")){
+				char toLowerChar = fieldName.charAt(0);
+				String toLowerStr = String.valueOf(toLowerChar).toLowerCase();
+				fieldName = fieldName.replaceFirst("" + toLowerChar, toLowerStr);
+			}else{
+				fieldName = fieldName.toLowerCase();
+			}
+		} else {
+			if(fieldName.matches("^._.*$")){
+				fieldName = fieldName.toLowerCase();
+			}
+		}
 		while (isUnderline(fieldName)) {
 			int toUpperCaseIndex = fieldName.indexOf("_") + 1;
 			char nextUnderlineChar = fieldName.charAt(toUpperCaseIndex);
-			String nextUnderlineCharUpperCased = String.valueOf(
-					nextUnderlineChar).toUpperCase();
-			fieldName = fieldName.replace("_" + nextUnderlineChar,
-					nextUnderlineCharUpperCased);
-		}
-		if (isInitialUpperCase(field)) {
-			fieldName = changeVariableNameWithInitialUpperCase(field);
+			String nextUnderlineCharUpperCased = String.valueOf(nextUnderlineChar).toUpperCase();
+			fieldName = fieldName.replaceFirst("_" + nextUnderlineChar, nextUnderlineCharUpperCased);
 		}
 		return fieldName;
 	}
 
-	public static String changeVariableNameWithInitialUpperCase(Field field) {
-		String fieldName = field.getName();
-		fieldName = fieldName.replace(String.valueOf(fieldName.charAt(0)),
+	public static String changeVariableNameWithInitialUpperCase(String fieldName) {
+		fieldName = fieldName.replaceFirst(String.valueOf(fieldName.charAt(0)),
 				String.valueOf(fieldName.charAt(0)).toLowerCase());
 		return fieldName;
 	}

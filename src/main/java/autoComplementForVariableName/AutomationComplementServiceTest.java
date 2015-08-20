@@ -17,6 +17,20 @@ public class AutomationComplementServiceTest {
 		automationComplementService = new AutomationComplementService();
 	}
 
+	public static void main(String[] args) {
+
+		String line = "private final String PERIOD_START_DATE = \" PERIOD_START_DATE \" ;";
+		String result = "private final String periodStartDate = \" periodStartDate \" ;";
+		System.out.println(result.matches(".*\".*periodStartDate.*\".*"));
+		String results[] = result.split("\".*periodStartDate.*\"");
+		String includeDouble=result.substring(results[0].length(), result.length()-results[1].length());
+		
+		for(String s:results){
+			System.out.println(s);
+		}
+		System.out.println(result);
+	}
+
 	@Test
 	public void testStart() throws Exception {
 		AutomationComplementService.start("e:/repo");
